@@ -1,5 +1,6 @@
 from math import e
 from sys import exit
+from unicodedata import category
 
 
 def main() -> None:
@@ -11,6 +12,13 @@ def main() -> None:
             if user_input == 'exit':
                 print(exit_message)
                 exit()
+
+            currency_symbols: list[str] = [
+                ch for ch in user_input if category(ch) == 'Sc']
+
+            if user_input[0] not in currency_symbols:
+                print('Please enter a valid mortgage...')
+                continue
 
             fixed_term_mortgage: float = float(user_input[1:])
 
