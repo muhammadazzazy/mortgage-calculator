@@ -1,66 +1,73 @@
 from math import e
+from sys import exit
 
 
 def main() -> None:
-    print('This program calculates the monthly payments of a fixed-term mortgage using a certain interest rate!')
+    print('💸 Welcome to The Mortgage Calculator! 💸')
+    exit_message: str = 'Exiting program...'
     while True:
-        user_input = input('Enter a fixed-term mortgage: ')
+        try:
+            user_input: str = input('Enter a fixed-term mortgage: ')
+            if user_input == 'exit':
+                print(exit_message)
+                exit()
 
-        while user_input[0] != '$':
-            user_input = input('Enter a fixed-term mortgage: ')
+            fixed_term_mortgage: float = float(user_input[1:])
 
-        fixed_term_mortgage = float(user_input[1:])
-
-        user_input = input('Enter an interest rate: ')
-
-        while user_input[-1] != '%':
             user_input = input('Enter an interest rate: ')
 
-        interest_rate = float(user_input[:-1])/100
+            if user_input[-1] == '%':
+                interest_rate: float = float(user_input[:-1])/100
+            else:
+                interest_rate: float = float(user_input)
 
-        user_input = input('Enter the number of terms: ')
-
-        while not user_input.isnumeric():
             user_input = input('Enter the number of terms: ')
 
-        n = int(user_input)
+            n: int = int(user_input)
 
-        compounding_intervals = ['Monthly', 'Weekly', 'Daily', 'Continuously']
+            compounding_intervals: list[str] = [
+                'Monthly', 'Weekly', 'Daily', 'Continuously']
 
-        output = f"""
-        Select one of these compounding intervals:
-        {compounding_intervals[0]}
-        {compounding_intervals[1]}
-        {compounding_intervals[2]}
-        {compounding_intervals[3]}
-        """
+            prompt: str = f"""
+Select one of these compounding intervals:
+{compounding_intervals[0]}
+{compounding_intervals[1]}
+{compounding_intervals[2]}
+{compounding_intervals[3]}"""
 
-        print(output)
+            print(prompt)
 
-        compounding_interval = input('Enter a compounding interval: ')
+            compounding_interval: str = input(
+                'Enter a compounding interval: ').capitalize()
 
-        effective_interest_rate = interest_rate
-        while compounding_interval.capitalize() not in compounding_intervals:
-            compounding_interval = input('Enter a compounding interval: ')
+            if compounding_interval not in compounding_intervals:
+                print('Please enter a valid compounding interval...')
+                continue
+
+        except ValueError:
+            print('Please enter valid input...')
+            continue
+
+        except KeyboardInterrupt:
+            print(exit_message)
+            exit()
 
         if compounding_interval == compounding_intervals[1]:
-            effective_interest_rate = ((1 + interest_rate / 4) ** 4) - 1
-
+            effective_interest_rate: float = ((1 + interest_rate / 4) ** 4) - 1
         elif compounding_interval == compounding_intervals[2]:
-            effective_interest_rate = ((1 + interest_rate / 30) ** 30) - 1
-
+            effective_interest_rate: float = (
+                (1 + interest_rate / 30) ** 30) - 1
         elif compounding_interval == compounding_intervals[3]:
-            effective_interest_rate = (e ** interest_rate) - 1
+            effective_interest_rate: float = (e ** interest_rate) - 1
+        else:
+            effective_interest_rate: float = interest_rate
 
-        # print(effective_interest_rate)
+        monthly_payment: float = ((effective_interest_rate * (1 + effective_interest_rate) ** n)/(
+            (1 + effective_interest_rate)**n - 1)) * fixed_term_mortgage
 
-        monthly_payment = ((effective_interest_rate * (1 + effective_interest_rate)
-                           ** n)/((1 + effective_interest_rate)**n - 1)) * fixed_term_mortgage
-
-        output = f"""
-        The monthly payment for a fixed-term mortgage of ${fixed_term_mortgage:.2f} with an interest rate of {interest_rate*100:.2f}%
-        and a {compounding_interval.lower()} compounding period is approximately ${monthly_payment:.2f}.
-        """
+        output: str = f"""
+The monthly payment for a fixed-term mortgage of ${fixed_term_mortgage:.2f} with an interest rate of {interest_rate*100:.2f}%
+and a {compounding_interval.lower()} compounding period is approximately ${monthly_payment:.2f}."""
 
         print(output)
 
