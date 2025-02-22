@@ -74,8 +74,8 @@ Select one of these compounding intervals:
             (1 + effective_interest_rate)**n - 1)) * fixed_term_mortgage
 
         output: str = f"""
-The monthly payment for a fixed-term mortgage of ${fixed_term_mortgage:.2f} with an interest rate of {interest_rate*100:.2f}%
-and a {compounding_interval.lower()} compounding period is approximately ${monthly_payment:.2f}."""
+The monthly payment for a fixed-term mortgage of ${fixed_term_mortgage:,.2f} with an interest rate of {interest_rate:.2%}
+and a {compounding_interval.lower()} compounding period is approximately ${monthly_payment:,.2f}."""
 
         print(output)
 
